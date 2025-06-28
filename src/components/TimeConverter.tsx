@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Clock, ArrowRight } from "lucide-react";
+import { Clock, ArrowRight, MapPin, Calendar } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useTimeContext } from "@/contexts/TimeContext";
 
@@ -102,7 +102,7 @@ const TimeConverter = () => {
       timeContext.setConvertedTimezone(targetTimezone);
       
       toast({
-        title: "Time Converted Successfully",
+        title: "✅ Time Converted Successfully",
         description: `${inputTime} ${timeZones.find(tz => tz.value === sourceTimezone)?.label} = ${timeResult} ${timeZones.find(tz => tz.value === targetTimezone)?.label}`,
       });
     } catch (error) {
@@ -116,50 +116,64 @@ const TimeConverter = () => {
   };
 
   return (
-    <Card className="w-full shadow-lg">
-      <CardHeader className="text-center pb-4">
-        <CardTitle className="flex items-center justify-center gap-2 text-xl sm:text-2xl">
-          <Clock className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
+    <Card className="w-full shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+      <CardHeader className="text-center pb-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-lg border-b border-blue-100">
+        <CardTitle className="flex items-center justify-center gap-3 text-2xl sm:text-3xl font-bold text-slate-800">
+          <div className="p-2 bg-blue-100 rounded-full">
+            <Clock className="h-6 w-6 sm:h-7 sm:w-7 text-blue-600" />
+          </div>
           Time Zone Converter
         </CardTitle>
+        <p className="text-slate-600 mt-2">Convert time between different time zones instantly</p>
       </CardHeader>
-      <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+      <CardContent className="p-6 sm:p-8">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
           {/* Source Time Section */}
-          <div className="space-y-3 sm:space-y-4 p-3 sm:p-4 bg-blue-50 rounded-lg">
-            <h3 className="font-semibold text-base sm:text-lg text-blue-900">From</h3>
-            <div className="space-y-3">
-              <div>
-                <Label htmlFor="input-date" className="text-sm">Date</Label>
+          <div className="space-y-6 p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-200 shadow-sm">
+            <div className="flex items-center gap-2 mb-4">
+              <MapPin className="h-5 w-5 text-blue-600" />
+              <h3 className="font-bold text-lg text-blue-900">From</h3>
+            </div>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="input-date" className="text-sm font-medium text-blue-800 flex items-center gap-2">
+                  <Calendar className="h-4 w-4" />
+                  Date
+                </Label>
                 <Input
                   id="input-date"
                   type="date"
                   value={inputDate}
                   onChange={(e) => setInputDate(e.target.value)}
-                  className="mt-1 text-sm sm:text-base"
+                  className="bg-white border-blue-200 focus:border-blue-400 focus:ring-blue-100"
                 />
               </div>
-              <div>
-                <Label htmlFor="input-time" className="text-sm">Time</Label>
+              <div className="space-y-2">
+                <Label htmlFor="input-time" className="text-sm font-medium text-blue-800 flex items-center gap-2">
+                  <Clock className="h-4 w-4" />
+                  Time
+                </Label>
                 <Input
                   id="input-time"
                   type="time"
                   value={inputTime}
                   onChange={(e) => setInputTime(e.target.value)}
-                  className="mt-1 text-sm sm:text-base"
+                  className="bg-white border-blue-200 focus:border-blue-400 focus:ring-blue-100"
                 />
               </div>
-              <div>
-                <Label htmlFor="source-timezone" className="text-sm">Source Timezone</Label>
+              <div className="space-y-2">
+                <Label htmlFor="source-timezone" className="text-sm font-medium text-blue-800">Source Timezone</Label>
                 <Select value={sourceTimezone} onValueChange={setSourceTimezone}>
-                  <SelectTrigger className="mt-1 text-sm sm:text-base">
+                  <SelectTrigger className="bg-white border-blue-200 focus:border-blue-400">
                     <SelectValue placeholder="Select source timezone" />
                   </SelectTrigger>
-                  <SelectContent className="max-h-48 sm:max-h-60">
+                  <SelectContent className="max-h-60 bg-white">
                     {timeZones.map((tz) => (
-                      <SelectItem key={tz.value} value={tz.value} className="text-sm">
-                        <span className="block truncate">{tz.label}</span>
-                        <span className="text-xs text-gray-500">({tz.offset})</span>
+                      <SelectItem key={tz.value} value={tz.value} className="focus:bg-blue-50">
+                        <div className="flex flex-col">
+                          <span className="font-medium">{tz.label}</span>
+                          <span className="text-xs text-slate-500">{tz.offset}</span>
+                        </div>
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -169,20 +183,25 @@ const TimeConverter = () => {
           </div>
 
           {/* Target Time Section */}
-          <div className="space-y-3 sm:space-y-4 p-3 sm:p-4 bg-green-50 rounded-lg">
-            <h3 className="font-semibold text-base sm:text-lg text-green-900">To</h3>
-            <div className="space-y-3">
-              <div>
-                <Label htmlFor="target-timezone" className="text-sm">Target Timezone</Label>
+          <div className="space-y-6 p-6 bg-gradient-to-br from-emerald-50 to-green-100 rounded-xl border border-emerald-200 shadow-sm">
+            <div className="flex items-center gap-2 mb-4">
+              <MapPin className="h-5 w-5 text-emerald-600" />
+              <h3 className="font-bold text-lg text-emerald-900">To</h3>
+            </div>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="target-timezone" className="text-sm font-medium text-emerald-800">Target Timezone</Label>
                 <Select value={targetTimezone} onValueChange={setTargetTimezone}>
-                  <SelectTrigger className="mt-1 text-sm sm:text-base">
+                  <SelectTrigger className="bg-white border-emerald-200 focus:border-emerald-400">
                     <SelectValue placeholder="Select target timezone" />
                   </SelectTrigger>
-                  <SelectContent className="max-h-48 sm:max-h-60">
+                  <SelectContent className="max-h-60 bg-white">
                     {timeZones.map((tz) => (
-                      <SelectItem key={tz.value} value={tz.value} className="text-sm">
-                        <span className="block truncate">{tz.label}</span>
-                        <span className="text-xs text-gray-500">({tz.offset})</span>
+                      <SelectItem key={tz.value} value={tz.value} className="focus:bg-emerald-50">
+                        <div className="flex flex-col">
+                          <span className="font-medium">{tz.label}</span>
+                          <span className="text-xs text-slate-500">{tz.offset}</span>
+                        </div>
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -190,14 +209,14 @@ const TimeConverter = () => {
               </div>
               
               {convertedTime && (
-                <div className="space-y-2 pt-2 sm:pt-4">
-                  <div className="p-2 sm:p-3 bg-white rounded border-2 border-green-200">
-                    <Label className="text-xs sm:text-sm text-gray-600">Converted Date</Label>
-                    <div className="text-base sm:text-lg font-semibold text-green-800 break-all">{convertedDate}</div>
+                <div className="space-y-3 pt-4">
+                  <div className="p-4 bg-white rounded-lg border-2 border-emerald-300 shadow-sm">
+                    <Label className="text-xs font-medium text-emerald-700 uppercase tracking-wide">Converted Date</Label>
+                    <div className="text-xl font-bold text-emerald-800 mt-1">{convertedDate}</div>
                   </div>
-                  <div className="p-2 sm:p-3 bg-white rounded border-2 border-green-200">
-                    <Label className="text-xs sm:text-sm text-gray-600">Converted Time</Label>
-                    <div className="text-base sm:text-lg font-semibold text-green-800">{convertedTime}</div>
+                  <div className="p-4 bg-white rounded-lg border-2 border-emerald-300 shadow-sm">
+                    <Label className="text-xs font-medium text-emerald-700 uppercase tracking-wide">Converted Time</Label>
+                    <div className="text-xl font-bold text-emerald-800 mt-1">{convertedTime}</div>
                   </div>
                 </div>
               )}
@@ -205,12 +224,14 @@ const TimeConverter = () => {
           </div>
         </div>
 
-        <div className="flex justify-center pt-2 sm:pt-4">
+        <div className="flex justify-center pt-8">
           <Button 
             onClick={convertTime} 
-            className="w-full sm:w-auto px-6 sm:px-8 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 flex items-center justify-center gap-2 text-sm sm:text-base"
+            className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-3 text-lg"
+            size="lg"
           >
-            Convert Time <ArrowRight className="h-4 w-4" />
+            Convert Time 
+            <ArrowRight className="h-5 w-5" />
           </Button>
         </div>
       </CardContent>
