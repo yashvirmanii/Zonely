@@ -2,6 +2,7 @@
 import TimeConverter from "@/components/TimeConverter";
 import MeetingScheduler from "@/components/MeetingScheduler";
 import { Separator } from "@/components/ui/separator";
+import { TimeProvider } from "@/contexts/TimeContext";
 
 const Index = () => {
   return (
@@ -12,11 +13,13 @@ const Index = () => {
           <p className="text-lg text-gray-600">Convert time across different time zones and schedule meetings</p>
         </div>
         
-        <div className="max-w-4xl mx-auto space-y-8">
-          <TimeConverter />
-          <Separator className="my-8" />
-          <MeetingScheduler />
-        </div>
+        <TimeProvider>
+          <div className="max-w-4xl mx-auto space-y-8">
+            <TimeConverter />
+            <Separator className="my-8" />
+            <MeetingScheduler />
+          </div>
+        </TimeProvider>
       </div>
     </div>
   );

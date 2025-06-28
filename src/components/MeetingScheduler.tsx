@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar, Users, Clock, ExternalLink } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useTimeContext } from "@/contexts/TimeContext";
 
 const timeZones = [
   { value: "America/New_York", label: "New York (EST/EDT)" },
@@ -32,6 +32,22 @@ const MeetingScheduler = () => {
   const [meetingDuration, setMeetingDuration] = useState("60");
   const [meetingDescription, setMeetingDescription] = useState("");
   const [attendeeEmails, setAttendeeEmails] = useState("");
+
+  const timeContext = useTimeContext();
+
+  useEffect(() => {
+    // Auto-fill from converted time if available
+    if (timeContext.convertedTime && timeContext.convertedDate && timeContext.convertedTimezone) {
+      setMeetingDate(timeContext.convertedDate);
+      setMeetingTime(timeContext.convertedTime);
+      setMeetingTimezone(timeContext.convertedTimezone);
+      console.log("Auto-filled meeting time from converter:", {
+        date: timeContext.convertedDate,
+        time: timeContext.convertedTime,
+        timezone: timeContext.convertedTimezone
+      });
+    }
+  }, [timeContext.convertedTime, timeContext.convertedDate, timeContext.convertedTimezone]);
 
   const generateGoogleMeetLink = () => {
     if (!meetingTitle || !meetingDate || !meetingTime) {

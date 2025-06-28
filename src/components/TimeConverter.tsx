@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Clock, ArrowRight } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useTimeContext } from "@/contexts/TimeContext";
 
 interface TimeZone {
   value: string;
@@ -37,9 +37,11 @@ const TimeConverter = () => {
   const [targetTimezone, setTargetTimezone] = useState("");
   const [convertedTime, setConvertedTime] = useState("");
   const [convertedDate, setConvertedDate] = useState("");
+  
+  const timeContext = useTimeContext();
 
   useEffect(() => {
-    // Set default values
+    // Set current time and date
     const now = new Date();
     const timeString = now.toTimeString().slice(0, 5);
     const dateString = now.toISOString().slice(0, 10);
@@ -47,13 +49,18 @@ const TimeConverter = () => {
     setInputTime(timeString);
     setInputDate(dateString);
     
-    // Try to detect user's timezone
+    // Auto-detect user's timezone
     const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    console.log("Detected user timezone:", userTimezone);
+    
     const matchingTimezone = timeZones.find(tz => tz.value === userTimezone);
     if (matchingTimezone) {
       setSourceTimezone(userTimezone);
+      console.log("Set source timezone to:", userTimezone);
     } else {
+      // Fallback to UTC if user's timezone is not in our list
       setSourceTimezone("UTC");
+      console.log("Fallback to UTC timezone");
     }
   }, []);
 
@@ -71,14 +78,7 @@ const TimeConverter = () => {
       // Create a date object from the input
       const inputDateTime = new Date(`${inputDate}T${inputTime}`);
       
-      // Create date in source timezone
-      const sourceDate = new Date(inputDateTime.toLocaleString("en-US", { timeZone: sourceTimezone }));
-      const utcDate = new Date(inputDateTime.getTime() + (inputDateTime.getTimezoneOffset() * 60000));
-      
-      // Convert to target timezone
-      const targetDate = new Date(utcDate.toLocaleString("en-US", { timeZone: targetTimezone }));
-      
-      // Format the result
+      // Format the result using proper timezone conversion
       const options: Intl.DateTimeFormatOptions = {
         timeZone: targetTimezone,
         year: 'numeric',
@@ -89,11 +89,16 @@ const TimeConverter = () => {
         hour12: false
       };
       
-      const formatted = new Intl.DateTimeFormat('en-CA', options).format(new Date(`${inputDate}T${inputTime}`));
+      const formatted = new Intl.DateTimeFormat('en-CA', options).format(inputDateTime);
       const [dateResult, timeResult] = formatted.split(', ');
       
       setConvertedDate(dateResult);
       setConvertedTime(timeResult);
+      
+      // Update context with converted time data
+      timeContext.setConvertedTime(timeResult);
+      timeContext.setConvertedDate(dateResult);
+      timeContext.setConvertedTimezone(targetTimezone);
       
       toast({
         title: "Time Converted Successfully",
