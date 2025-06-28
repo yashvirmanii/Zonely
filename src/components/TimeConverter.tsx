@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -116,48 +117,49 @@ const TimeConverter = () => {
 
   return (
     <Card className="w-full shadow-lg">
-      <CardHeader className="text-center">
-        <CardTitle className="flex items-center justify-center gap-2 text-2xl">
-          <Clock className="h-6 w-6 text-blue-600" />
+      <CardHeader className="text-center pb-4">
+        <CardTitle className="flex items-center justify-center gap-2 text-xl sm:text-2xl">
+          <Clock className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
           Time Zone Converter
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="grid md:grid-cols-2 gap-6">
+      <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {/* Source Time Section */}
-          <div className="space-y-4 p-4 bg-blue-50 rounded-lg">
-            <h3 className="font-semibold text-lg text-blue-900">From</h3>
+          <div className="space-y-3 sm:space-y-4 p-3 sm:p-4 bg-blue-50 rounded-lg">
+            <h3 className="font-semibold text-base sm:text-lg text-blue-900">From</h3>
             <div className="space-y-3">
               <div>
-                <Label htmlFor="input-date">Date</Label>
+                <Label htmlFor="input-date" className="text-sm">Date</Label>
                 <Input
                   id="input-date"
                   type="date"
                   value={inputDate}
                   onChange={(e) => setInputDate(e.target.value)}
-                  className="mt-1"
+                  className="mt-1 text-sm sm:text-base"
                 />
               </div>
               <div>
-                <Label htmlFor="input-time">Time</Label>
+                <Label htmlFor="input-time" className="text-sm">Time</Label>
                 <Input
                   id="input-time"
                   type="time"
                   value={inputTime}
                   onChange={(e) => setInputTime(e.target.value)}
-                  className="mt-1"
+                  className="mt-1 text-sm sm:text-base"
                 />
               </div>
               <div>
-                <Label htmlFor="source-timezone">Source Timezone</Label>
+                <Label htmlFor="source-timezone" className="text-sm">Source Timezone</Label>
                 <Select value={sourceTimezone} onValueChange={setSourceTimezone}>
-                  <SelectTrigger className="mt-1">
+                  <SelectTrigger className="mt-1 text-sm sm:text-base">
                     <SelectValue placeholder="Select source timezone" />
                   </SelectTrigger>
-                  <SelectContent className="max-h-60">
+                  <SelectContent className="max-h-48 sm:max-h-60">
                     {timeZones.map((tz) => (
-                      <SelectItem key={tz.value} value={tz.value}>
-                        {tz.label} ({tz.offset})
+                      <SelectItem key={tz.value} value={tz.value} className="text-sm">
+                        <span className="block truncate">{tz.label}</span>
+                        <span className="text-xs text-gray-500">({tz.offset})</span>
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -167,19 +169,20 @@ const TimeConverter = () => {
           </div>
 
           {/* Target Time Section */}
-          <div className="space-y-4 p-4 bg-green-50 rounded-lg">
-            <h3 className="font-semibold text-lg text-green-900">To</h3>
+          <div className="space-y-3 sm:space-y-4 p-3 sm:p-4 bg-green-50 rounded-lg">
+            <h3 className="font-semibold text-base sm:text-lg text-green-900">To</h3>
             <div className="space-y-3">
               <div>
-                <Label htmlFor="target-timezone">Target Timezone</Label>
+                <Label htmlFor="target-timezone" className="text-sm">Target Timezone</Label>
                 <Select value={targetTimezone} onValueChange={setTargetTimezone}>
-                  <SelectTrigger className="mt-1">
+                  <SelectTrigger className="mt-1 text-sm sm:text-base">
                     <SelectValue placeholder="Select target timezone" />
                   </SelectTrigger>
-                  <SelectContent className="max-h-60">
+                  <SelectContent className="max-h-48 sm:max-h-60">
                     {timeZones.map((tz) => (
-                      <SelectItem key={tz.value} value={tz.value}>
-                        {tz.label} ({tz.offset})
+                      <SelectItem key={tz.value} value={tz.value} className="text-sm">
+                        <span className="block truncate">{tz.label}</span>
+                        <span className="text-xs text-gray-500">({tz.offset})</span>
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -187,14 +190,14 @@ const TimeConverter = () => {
               </div>
               
               {convertedTime && (
-                <div className="space-y-2 pt-4">
-                  <div className="p-3 bg-white rounded border-2 border-green-200">
-                    <Label className="text-sm text-gray-600">Converted Date</Label>
-                    <div className="text-lg font-semibold text-green-800">{convertedDate}</div>
+                <div className="space-y-2 pt-2 sm:pt-4">
+                  <div className="p-2 sm:p-3 bg-white rounded border-2 border-green-200">
+                    <Label className="text-xs sm:text-sm text-gray-600">Converted Date</Label>
+                    <div className="text-base sm:text-lg font-semibold text-green-800 break-all">{convertedDate}</div>
                   </div>
-                  <div className="p-3 bg-white rounded border-2 border-green-200">
-                    <Label className="text-sm text-gray-600">Converted Time</Label>
-                    <div className="text-lg font-semibold text-green-800">{convertedTime}</div>
+                  <div className="p-2 sm:p-3 bg-white rounded border-2 border-green-200">
+                    <Label className="text-xs sm:text-sm text-gray-600">Converted Time</Label>
+                    <div className="text-base sm:text-lg font-semibold text-green-800">{convertedTime}</div>
                   </div>
                 </div>
               )}
@@ -202,10 +205,10 @@ const TimeConverter = () => {
           </div>
         </div>
 
-        <div className="flex justify-center">
+        <div className="flex justify-center pt-2 sm:pt-4">
           <Button 
             onClick={convertTime} 
-            className="px-8 py-2 bg-blue-600 hover:bg-blue-700 flex items-center gap-2"
+            className="w-full sm:w-auto px-6 sm:px-8 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 flex items-center justify-center gap-2 text-sm sm:text-base"
           >
             Convert Time <ArrowRight className="h-4 w-4" />
           </Button>
